@@ -1,0 +1,5 @@
+numpy
+pandas
+pyspark
+jupyterlab
+pex

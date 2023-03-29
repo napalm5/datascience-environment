@@ -1,0 +1,5 @@
+SERVICE           HOST_PORT   CONTAINER_PORT   CONTAINER           CREDENTIALS
+jupyterlab        5000        8888             python-worker       
+python-postgres   5001        5432             python-postgres
+airflow-webui     8080        8080             airflow-webserver
+demos             6001-6500   6000-6500        python-webserver

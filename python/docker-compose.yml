@@ -1,0 +1,56 @@
+version: '3.8'
+x-python-commoon: 
+  &python-common
+  user: "${PYTHON_UID:-50000}:0"
+
+services:
+  python-worker:
+    image: python-worker
+    build: 
+      context: .
+      dockerfile: Dockerfile.worker
+    stdin_open: true 
+    tty: true            
+    ports: 
+      - "5000:5000" # Jupyter
+    links:
+      - python-postgres
+      - airflow-scheduler
+    volumes:
+      - ${PYTHON_HOME_DIR:-.}:/opt/python
+    depends_on:
+      - python-postgres
+    profiles: 
+      - python 
+
+  python-webserver:
+    image: python-webserver
+    build: 
+      context: .
+      dockerfile: Dockerfile.webserver
+    stdin_open: true 
+    tty: true            
+    ports: 
+      - "6001-6500:6001-6500"
+    links:
+      - python-worker
+      - python-postgres
+    volumes:
+      - ${PYTHON_HOME_DIR:-.}/demos:/opt/python
+    depends_on:
+      - python-postgres
+    profiles: 
+      - python 
+
+
+  python-postgres:
+    image: 'postgres:latest'
+    ports: 
+      - 5001:5432
+#{POSTGRES_PORT}:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} 
+      POSTGRES_DB: ${POSTGRES_DB}
+    profiles:
+      - python 

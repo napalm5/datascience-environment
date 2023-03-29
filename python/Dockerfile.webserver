@@ -1,0 +1,25 @@
+FROM python:3.10
+
+# Prepare environment
+RUN useradd --create-home --shell /bin/bash cvf
+#USER cvf
+RUN mkdir -p /home/cvf
+WORKDIR /home/cvf
+
+# Prepare files
+COPY requirements_webserver.txt .
+
+# Set up environment
+RUN apt update 
+RUN apt install openjdk-11-jre screen vim -y
+# Create user "python" ?
+RUN pip install -r requirements_webserver.txt
+# Set up jupyterlab
+# Set up venvs?
+# Set up yarn queue
+WORKDIR /opt/python
+
+# Run services (not necessary now)
+
+# Entrypoint
+CMD bash
